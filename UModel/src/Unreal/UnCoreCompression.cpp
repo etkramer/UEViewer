@@ -8,7 +8,7 @@
 
 // includes for package decompression
 #include <lzo/lzo1x.h>
-#include <zlib/zlib.h>
+#include <zlib.h>
 
 #if SUPPORT_XBOX360
 
@@ -35,7 +35,7 @@
 #endif // SUPPORT_XBOX360
 
 #if USE_LZ4
-#	include "lz4/lz4.h"
+#	include "lz4.h"
 #endif
 
 // AES code for UE4

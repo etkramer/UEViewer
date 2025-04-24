@@ -94,35 +94,7 @@
     <ClCompile Include="src\Viewers\SkelMeshViewer.cpp" />
     <ClCompile Include="src\Viewers\StatMeshViewer.cpp" />
     <ClCompile Include="src\Viewers\VertMeshViewer.cpp" />
-    <ClCompile Include="include\lzo\lzo_init.c" />
-    <ClCompile Include="include\lzo\lzo1x_d1.c" />
-    <ClCompile Include="include\lzo\lzo1x_d2.c" />
-    <ClCompile Include="include\lz4\lz4.c" />
     <ClCompile Include="include\rijndael\rijndael.c" />
-    <ClCompile Include="include\libpng\png.c" />
-    <ClCompile Include="include\libpng\pngerror.c" />
-    <ClCompile Include="include\libpng\pngget.c" />
-    <ClCompile Include="include\libpng\pngmem.c" />
-    <ClCompile Include="include\libpng\pngpread.c" />
-    <ClCompile Include="include\libpng\pngread.c" />
-    <ClCompile Include="include\libpng\pngrio.c" />
-    <ClCompile Include="include\libpng\pngrtran.c" />
-    <ClCompile Include="include\libpng\pngrutil.c" />
-    <ClCompile Include="include\libpng\pngset.c" />
-    <ClCompile Include="include\libpng\pngtrans.c" />
-    <ClCompile Include="include\libpng\pngwio.c" />
-    <ClCompile Include="include\libpng\pngwrite.c" />
-    <ClCompile Include="include\libpng\pngwtran.c" />
-    <ClCompile Include="include\libpng\pngwutil.c" />
-    <ClCompile Include="include\zlib\adler32.c" />
-    <ClCompile Include="include\zlib\compress.c" />
-    <ClCompile Include="include\zlib\crc32.c" />
-    <ClCompile Include="include\zlib\deflate.c" />
-    <ClCompile Include="include\zlib\inffast.c" />
-    <ClCompile Include="include\zlib\inflate.c" />
-    <ClCompile Include="include\zlib\inftrees.c" />
-    <ClCompile Include="include\zlib\trees.c" />
-    <ClCompile Include="include\zlib\uncompr.c" />
     <ClCompile Include="include\detex\bits.cpp" />
     <ClCompile Include="include\detex\bptc-tables.cpp" />
     <ClCompile Include="include\detex\clamp.cpp" />
@@ -291,7 +263,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;squish-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;squish-debug.lib;libpng16-debug.lib;zlib-debug.lib;lz4-debug.lib;lzo2-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -316,7 +288,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;squish-release.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;squish-release.lib;libpng16-release.lib;zlib-release.lib;lz4-release.lib;winmm.lib;lzo2-release.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
