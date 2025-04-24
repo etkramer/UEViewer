@@ -269,6 +269,9 @@ static void CallExportStaticMesh(const CStaticMesh* Mesh)
         case EExportMeshFormat::gltf:
             ExportStaticMeshGLTF(Mesh);
             break;
+        case EExportMeshFormat::fbx:
+            ExportStaticMeshFBX(Mesh);
+            break;
     }
 }
 

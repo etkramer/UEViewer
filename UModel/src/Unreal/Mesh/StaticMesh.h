@@ -41,6 +41,18 @@ struct CStaticMeshLod : public CBaseMeshLod
         HasTangents = true;
     }
 
+    const CMeshUVFloat& GetVertexUV(int32 VertexIndex, int32 UVIndex) const
+    {
+        if (UVIndex == 0)
+        {
+            return Verts[VertexIndex].UV;
+        }
+        else
+        {
+            return ExtraUV[UVIndex - 1][VertexIndex];
+        }
+    }
+
     void AllocateVerts(int Count)
     {
         guard(CStaticMeshLod::AllocateVerts)

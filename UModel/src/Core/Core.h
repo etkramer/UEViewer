@@ -29,6 +29,8 @@
 #	include <tracy/Tracy.hpp>     // Include Tracy.hpp header
 #endif
 
+#include <new>
+
 #include "Build.h"
 
 #if RENDERING
@@ -349,7 +351,10 @@ FORCEINLINE void* appMallocNoInit(int size, int alignment = 8)
 
 void appFree(void *ptr);
 
-#ifndef __APPLE__
+FORCEINLINE void* operator new(size_t /*size*/, std::align_val_t /*alignment*/, void* ptr)
+{
+	return ptr;
+}
 
 // C++ specs doesn't allow inlining of operator new/delete:  https://en.cppreference.com/w/cpp/memory/new/operator_new
 // All compilers are fine with that, except clang on macos. For this case we're providing "static" declaration deparately.
@@ -364,31 +369,26 @@ FORCEINLINE void* operator new[](size_t size)
 	return appMalloc(size);
 }
 
-FORCEINLINE void operator delete(void* ptr)
+FORCEINLINE void operator delete(void* ptr) noexcept
 {
 	appFree(ptr);
 }
 
-FORCEINLINE void operator delete[](void* ptr)
+FORCEINLINE void operator delete[](void* ptr) noexcept
 {
 	appFree(ptr);
 }
 
-#endif // __APPLE__
-
-
-// C++17 (delete with alignment)
-FORCEINLINE void operator delete(void* ptr, size_t)
+// C++17 sized delete
+FORCEINLINE void operator delete(void* ptr, size_t /*size*/) noexcept
 {
 	appFree(ptr);
 }
 
-// inplace new
-FORCEINLINE void* operator new(size_t /*size*/, void* ptr)
+FORCEINLINE void operator delete[](void* ptr, size_t /*size*/) noexcept
 {
-	return ptr;
+	appFree(ptr);
 }
-
 
 #define DEFAULT_ALIGNMENT		8
 #define MEM_CHUNK_SIZE			16384
@@ -686,8 +686,6 @@ inline void appDumpStackTrace(const address_t* buffer, int depth) {}
 
 #endif // _WIN32
 
-
 #include "Math3D.h"
-
 
 #endif // __CORE_H__

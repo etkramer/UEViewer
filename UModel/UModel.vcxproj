@@ -23,6 +23,7 @@
     <ClCompile Include="src\Core\TextContainer.cpp" />
     <ClCompile Include="src\Exporters\Export3D.cpp" />
     <ClCompile Include="src\Exporters\Exporters.cpp" />
+    <ClCompile Include="src\Exporters\ExportFBX.cpp" />
     <ClCompile Include="src\Exporters\ExportGLTF.cpp" />
     <ClCompile Include="src\Exporters\ExportMaterial.cpp" />
     <ClCompile Include="src\Exporters\ExportMd5.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="src\Core\TextContainer.h" />
     <ClInclude Include="src\Core\Win32Types.h" />
     <ClInclude Include="src\Exporters\Exporters.h" />
+    <ClInclude Include="src\Exporters\ExportFBX.h" />
     <ClInclude Include="src\Exporters\Psk.h" />
     <ClInclude Include="src\MeshInstance\MeshInstance.h" />
     <ClInclude Include="src\UI\BaseDialog.h" />
@@ -286,6 +288,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;HAS_UI=1;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;VSTUDIO_INTEGRATION;UMODEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\;$(ProjectDir)\src\Core\;$(ProjectDir)\src\MeshInstance\;$(ProjectDir)\src\UI\;$(ProjectDir)\src\UmodelTool\;$(ProjectDir)\src\Unreal\;$(ProjectDir)\src\Viewers\;include\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -293,7 +297,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -306,6 +311,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;HAS_UI=1;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;VSTUDIO_INTEGRATION;UMODEL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)\src\;$(ProjectDir)\src\Core\;$(ProjectDir)\src\MeshInstance\;$(ProjectDir)\src\UI\;$(ProjectDir)\src\UmodelTool\;$(ProjectDir)\src\Unreal\;$(ProjectDir)\src\Viewers\;include\;</AdditionalIncludeDirectories>
     </ClCompile>
@@ -315,7 +322,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-release.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

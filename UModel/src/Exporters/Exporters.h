@@ -66,6 +66,8 @@ class CStaticMesh;
 void ExportPsk(const CSkeletalMesh* Mesh);
 void ExportPsa(const CAnimSet* Anim);
 void ExportStaticMesh(const CStaticMesh* Mesh);
+// FBX
+void ExportStaticMeshFBX(const CStaticMesh* Mesh);
 // MD5Mesh
 void ExportMd5Mesh(const CSkeletalMesh* Mesh);
 void ExportMd5Anim(const CAnimSet* Anim);

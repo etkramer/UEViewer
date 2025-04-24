@@ -1454,6 +1454,16 @@ struct FVector2D
 {
     float X, Y;
 
+    friend bool operator==(const FVector2D& Lhs, const FVector2D& Rhs)
+    {
+        return Lhs.X == Rhs.X && Lhs.Y == Rhs.Y;
+    }
+
+    friend bool operator!=(const FVector2D& Lhs, const FVector2D& Rhs)
+    {
+        return !(Lhs == Rhs);
+    }
+
     friend FArchive& operator<<(FArchive& Ar, FVector2D& V)
     {
         return Ar << V.X << V.Y;
@@ -2313,6 +2323,22 @@ class TMap : public TArray<TMapPair<TK, TV>>
         friend FORCEINLINE FArchive& operator<<(FArchive& Ar, TMap& Map)
         {
             return Ar << (TArray<TMapPair<TK, TV>>&)Map;
+        }
+
+        FORCEINLINE TV& Add(const TK& Key, const TV& Value)
+        {
+            int Index = TArray<TMapPair<TK, TV>>::AddUninitialized(1);
+            TMapPair<TK, TV>* NewPair = &((*this)[Index]);
+            new (NewPair) TMapPair<TK, TV>{Key, Value};
+            return NewPair->Value;
+        }
+
+        FORCEINLINE TV& Add(const TK& Key, TV&& Value)
+        {
+            int Index = TArray<TMapPair<TK, TV>>::AddUninitialized(1);
+            TMapPair<TK, TV>* NewPair = &((*this)[Index]);
+            new (NewPair) TMapPair<TK, TV>{Key, MoveTemp(Value)};
+            return NewPair->Value;
         }
 };
 

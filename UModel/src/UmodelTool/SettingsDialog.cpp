@@ -147,6 +147,7 @@ UIElement& UISettingsDialog::MakeExportOptions()
                   .SetWidth(100)
                   .AddItem("ActorX (pskx)", EExportMeshFormat::psk)
                   .AddItem("glTF 2.0", EExportMeshFormat::gltf)
+                  .AddItem("FBX", EExportMeshFormat::fbx)
             ]
             + NewControl(UICheckbox, "Export LODs", &Opt.Export.ExportMeshLods)
         ]
