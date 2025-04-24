@@ -162,7 +162,6 @@ UIElement& UISettingsDialog::MakeExportOptions()
                   .AddItem("TGA (uncompressed)", ETextureExportFormat::tga_uncomp)
                   .AddItem("PNG", ETextureExportFormat::png)
             ]
-            + NewControl(UICheckbox, "Export compressed textures to dds format", &Opt.Export.ExportDdsTexture)
         ]
         + NewControl(UICheckbox, "Don't overwrite already exported files", &Opt.Export.DontOverwriteFiles);
 }

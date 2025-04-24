@@ -122,12 +122,13 @@ static const char* KnownExtensions[] =
 static const char* SkipExtensions[] =
 {
     "tga", "png", "dds", "bmp", "mat", "txt", // textures, materials
-    "psk", "pskx", "psa", "config", "gltf", // meshes, animations
+    "psk", "pskx", "psa", "config", "gltf", "fbx", // meshes, animations
     "ogg", "wav", "fsb", "xma", "unk", // sounds
     "gfx", "fxa", // 3rd party
     "md5mesh", "md5anim", // md5 mesh
     "uc", "3d", // vertex mesh
     "wem", // WwiseAudio files
+    "t3d", "avi"
 };
 
 #if UNREAL4
@@ -552,8 +553,6 @@ FORCEINLINE void DeallocFileInfo(CGameFileInfo* info)
 CGameFileInfo* CGameFileInfo::Register(FVirtualFileSystem* parentVfs, const CRegisterFileInfo& RegisterInfo)
 {
     guard(CGameFileInfo::Register)
-        ;
-
         // Verify file extension
         const char* ext = strrchr(RegisterInfo.Filename, '.');
         if (!ext) return NULL; // unknown type

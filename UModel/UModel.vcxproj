@@ -87,7 +87,6 @@
     <ClCompile Include="src\Unreal\UnrealPackage\UnPackage4.cpp" />
     <ClCompile Include="src\Unreal\UnrealPackage\UnPackageReader.cpp" />
     <ClCompile Include="src\Unreal\UnRenderer.cpp" />
-    <ClCompile Include="src\Unreal\Wrappers\TextureNVTT.cpp" />
     <ClCompile Include="src\Unreal\Wrappers\TexturePNG.cpp" />
     <ClCompile Include="src\Viewers\MaterialViewer.cpp" />
     <ClCompile Include="src\Viewers\MeshViewer.cpp" />
@@ -95,10 +94,6 @@
     <ClCompile Include="src\Viewers\SkelMeshViewer.cpp" />
     <ClCompile Include="src\Viewers\StatMeshViewer.cpp" />
     <ClCompile Include="src\Viewers\VertMeshViewer.cpp" />
-    <ClCompile Include="include\nvtt\nvimage\BlockDXT.cpp" />
-    <ClCompile Include="include\nvtt\nvimage\ColorBlock.cpp" />
-    <ClCompile Include="include\nvtt\nvimage\DirectDrawSurface.cpp" />
-    <ClCompile Include="include\nvtt\nvimage\Image.cpp" />
     <ClCompile Include="include\lzo\lzo_init.c" />
     <ClCompile Include="include\lzo\lzo1x_d1.c" />
     <ClCompile Include="include\lzo\lzo1x_d2.c" />
@@ -222,7 +217,6 @@
     <ClInclude Include="src\Unreal\UnSound.h" />
     <ClInclude Include="src\Unreal\UnThirdParty.h" />
     <ClInclude Include="src\Unreal\UnTypeinfo.h" />
-    <ClInclude Include="src\Unreal\Wrappers\TextureNVTT.h" />
     <ClInclude Include="src\Unreal\Wrappers\TexturePNG.h" />
     <ClInclude Include="src\Viewers\ObjectViewer.h" />
   </ItemGroup>
@@ -297,7 +291,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;squish-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -322,7 +316,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;squish-release.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

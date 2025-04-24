@@ -73,7 +73,6 @@ struct CExportSettings
         DECLARE_STRUCT(CExportSettings);
 
         FString ExportPath;
-        bool ExportDdsTexture;
         EExportMeshFormat SkeletalMeshFormat;
         EExportMeshFormat StaticMeshFormat;
         ETextureExportFormat TextureFormat;
@@ -84,7 +83,6 @@ struct CExportSettings
 
         BEGIN_PROP_TABLE
             PROP_STRING(ExportPath)
-            PROP_BOOL(ExportDdsTexture)
             PROP_INT(SkeletalMeshFormat)
             PROP_INT(StaticMeshFormat)
             PROP_INT(TextureFormat)

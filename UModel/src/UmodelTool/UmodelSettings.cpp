@@ -122,8 +122,7 @@ void CExportSettings::SetPath(const char* path)
 void CExportSettings::Reset()
 {
     SetPath(EXPORT_DIRECTORY);
-
-    ExportDdsTexture = false;
+    
     SkeletalMeshFormat = EExportMeshFormat::psk;
     StaticMeshFormat = EExportMeshFormat::psk;
     TextureFormat = ETextureExportFormat::tga;
@@ -143,7 +142,6 @@ void CExportSettings::Apply()
 
     GNoTgaCompress = (TextureFormat == ETextureExportFormat::tga_uncomp);
     GExportPNG = (TextureFormat == ETextureExportFormat::png);
-    GExportDDS = ExportDdsTexture;
 
     GExportLods = ExportMeshLods;
     GUncook = SaveUncooked;

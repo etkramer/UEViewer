@@ -32,13 +32,6 @@ const char* FBXVersions[] =
 const char* GetExportTextureName(const UUnrealMaterial *Tex)
 {
 	CTextureData tex_data;
-	if (Tex->GetTextureData(tex_data))
-	{
-		if (GExportDDS && PixelFormatInfo[tex_data.Format].IsDXT())
-		{
-			return GetExportFileName(Tex, "%s.dds", Tex->Name);
-		}
-	}
 	// For HDR textures use Radiance format
 	if (PixelFormatInfo[tex_data.Format].Float)
 	{

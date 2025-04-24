@@ -6,3 +6,4 @@
 /.idea
 /UModel/umodel.cfg
 /UModel/libs/*.lib
+/UModel/UmodelExport

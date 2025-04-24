@@ -1,5 +1,3 @@
-#include "Wrappers/TextureNVTT.h"
-
 #include "Core.h"
 #include "UnCore.h"
 #include "UnObject.h"
@@ -17,7 +15,7 @@
 #endif
 
 #include <detex/detex.h>
-
+#include <squish.h>
 #if 0
 #	define PROFILE_DDS(cmd)		cmd
 #else
@@ -101,7 +99,6 @@ unsigned CTextureData::GetFourCC() const
 byte* CTextureData::Decompress(int MipLevel, int Slice)
 {
     guard(CTextureData::Decompress)
-        ;
 
         if (!Mips.IsValidIndex(MipLevel))
             return NULL;
@@ -122,27 +119,7 @@ byte* CTextureData::Decompress(int MipLevel, int Slice)
         int pixelSize = PixelFormatInfo[Format].Float ? 16 : 4;
         int size = USize * VSize * pixelSize;
         byte* dst = (byte*)appMallocNoInit(size);
-
-        #if 0
-	{
-		// visualize UV map
-		memset(dst, 0xFF, size);
-		byte *d = dst;
-		for (int i = 0; i < USize * VSize; i++, d += 4)
-		{
-			int x = i % USize;
-			int y = i / USize;
-			d[0] = d[1] = d[2] = 0;
-			int x0 = x % 16;
-			int y0 = y % 16;
-			if (x0 == 0)			d[0] = 255;	// red - binormal axis
-			else if (y0 == 0)		d[2] = 255;	// blue - tangent axis
-			else if (x0 + y0 < 7)	d[1] = 128;	// dark green
-		}
-		return dst;
-	}
-        #endif
-
+	
         // Process non-dxt formats here. If texture format has FourCC, then it will be
         // processed by code below this switch.
         switch (Format)
@@ -448,41 +425,30 @@ byte* CTextureData::Decompress(int MipLevel, int Slice)
                     return dst;
                 }
                 break;
+        	case TPF_DXT1:
+        	case TPF_DXT3:
+        	case TPF_DXT5:
+        	case TPF_BC4:
+        	case TPF_BC5:
+        		{
+        			int DecompressFormat = -1;
+			        switch (Format)
+			        {
+				        case TPF_DXT1: DecompressFormat = squish::kDxt1; break;
+				        case TPF_DXT3: DecompressFormat = squish::kDxt3; break;
+				        case TPF_DXT5: DecompressFormat = squish::kDxt5; break;
+				        case TPF_BC4: DecompressFormat = squish::kBc4; break;
+				        case TPF_BC5: DecompressFormat = squish::kBc5; break;
+			        }
+        			if (DecompressFormat >= 0)
+        			{
+        				squish::DecompressImage(dst, USize, VSize, Data, DecompressFormat);
+        			}
+        		}
+        		break;
         }
 
         static_assert(ARRAY_COUNT(PixelFormatInfo) == TPF_MAX, "Wrong PixelFormatInfo array size");
-        unsigned fourCC = PixelFormatInfo[Format].FourCC;
-        if (!fourCC)
-        {
-            appNotify("Unable to unpack texture %s: unsupported texture format %s\n", ObjectName,
-                      PixelFormatInfo[Format].Name);
-            memset(dst, 0xFF, size);
-            return dst;
-        }
-
-        PROFILE_DDS(appResetProfiler());
-
-        nv::DDSHeader header;
-        nv::Image image;
-        header.setFourCC(fourCC & 0xFF, (fourCC >> 8) & 0xFF, (fourCC >> 16) & 0xFF, (fourCC >> 24) & 0xFF);
-        header.setWidth(USize);
-        header.setHeight(VSize);
-        header.setNormalFlag(Format == TPF_DXT5N || Format == TPF_BC5); // flag to restore normalmap from 2 colors
-        DecodeDDS(Data, USize, VSize, header, image);
-
-        byte* s = (byte*)image.pixels();
-        byte* d = dst;
-
-        for (int i = 0; i < USize * VSize; i++, s += 4, d += 4)
-        {
-            // BGRA -> RGBA
-            d[0] = s[2];
-            d[1] = s[1];
-            d[2] = s[0];
-            d[3] = s[3];
-        }
-
-        PROFILE_DDS(appPrintProfiler());
 
         if (Format == TPF_DXT1)
             PostProcessAlpha(dst, USize, VSize); //??
