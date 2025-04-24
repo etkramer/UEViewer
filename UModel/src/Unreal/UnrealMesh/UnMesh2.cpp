@@ -179,13 +179,23 @@ void ULodMesh::Serialize(FArchive& Ar)
             Ar << SkinTesselationFactor;
         }
         #if LINEAGE2
-        if (Ar.Game == GAME_Lineage2 && Version >= 5)
+        if (Ar.Game == GAME_Lineage2)
         {
-            int unk;
-            Ar << unk;
-            // From forum discussion: version 6 has 1 more byte here
-            if (Version >= 6)
-                Ar.Seek(Ar.Tell() + 2);
+            if(Version >= 5)
+            {
+                int UseReduceLOD;
+                Ar << UseReduceLOD;
+            }
+            if(Version >= 6)
+            {
+                uint8_t IsIgnoreShadow;
+                Ar << IsIgnoreShadow;
+            }
+            if(Version >= 7)
+            {
+                uint8_t IsIgnoreDepthRenderTarget;
+                Ar << IsIgnoreDepthRenderTarget;
+            }
         }
         #endif // LINEAGE2
         #if BATTLE_TERR
