@@ -442,7 +442,9 @@ byte* CTextureData::Decompress(int MipLevel, int Slice)
 			        }
         			if (DecompressFormat >= 0)
         			{
+        				PROFILE_DDS(appResetProfiler());
         				squish::DecompressImage(dst, USize, VSize, Data, DecompressFormat);
+        				PROFILE_DDS(appPrintProfiler());
         			}
         		}
         		break;
