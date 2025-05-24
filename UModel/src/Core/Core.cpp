@@ -278,6 +278,19 @@ void CErrorContext::UnwindThrow(const char* fmt, ...)
 #define VA_GOODSIZE		512
 #define VA_BUFSIZE		2048
 
+bool IsValidName(const char* str) {
+    if (!str) return false;
+
+    icu::UnicodeString ustr(str);
+    for (int i = 0; i < ustr.length(); ++i) {
+        UChar32 c = ustr.char32At(i);
+        if (!(u_isalnum(c) || c == '_' || u_isUWhiteSpace(c))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // name of this function is a short form of "VarArgs"
 const char* va(const char* format, ...)
 {

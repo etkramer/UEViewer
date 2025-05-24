@@ -263,7 +263,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;squish-debug.lib;libpng16-debug.lib;zlib-debug.lib;lz4-debug.lib;lzo2-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>icudt-debug.lib;icuin-debug.lib;icuuc-debug.lib;SDL2-debug.lib;libfbxsdk-debug.lib;libxml2-debug.lib;squish-debug.lib;libpng16-debug.lib;zlib-debug.lib;lz4-debug.lib;lzo2-debug.lib;winmm.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -288,7 +288,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>libs\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;squish-release.lib;libpng16-release.lib;zlib-release.lib;lz4-release.lib;winmm.lib;lzo2-release.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>icudt-release.lib;icuin-release.lib;icuuc-release.lib;SDL2-release.lib;libfbxsdk-release.lib;libxml2-release.lib;squish-release.lib;libpng16-release.lib;zlib-release.lib;lz4-release.lib;winmm.lib;lzo2-release.lib;Setupapi.lib;Advapi32.lib;version.lib;imm32.lib;oleaut32.lib;</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

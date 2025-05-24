@@ -2455,6 +2455,8 @@ class FString
         void TrimStartInline();
         void TrimEndInline();
         void TrimStartAndEndInline();
+        bool Contains(const char* Substring);
+        bool Contains(const FString& Substring);
 
         FString& AppendChar(char ch);
         FString& AppendChars(const char* s, int count);

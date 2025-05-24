@@ -497,6 +497,19 @@ void FString::TrimStartAndEndInline()
     TrimEndInline();
 }
 
+bool FString::Contains(const char* Substring)
+{
+    if (IsEmpty() || Substring == nullptr || Substring[0] == '\0')
+        return false;
+        
+    const char* ThisStr = **this;
+    return strstr(ThisStr, Substring) != nullptr;
+}
+
+bool FString::Contains(const FString& Substring)
+{
+    return Contains(*Substring);
+}
 
 /*-----------------------------------------------------------------------------
 	FName (string) pool

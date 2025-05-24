@@ -150,7 +150,7 @@ void UObject::BeginLoad()
 
 void UObject::EndLoad()
 {
-    assert(GObjBeginLoadCount > 0);
+    assert(GObjBeginLoadCount > 0)
     if (GObjBeginLoadCount > 1)
     {
         GObjBeginLoadCount--;
@@ -158,8 +158,6 @@ void UObject::EndLoad()
     }
 
     guard(UObject::EndLoad)
-        ;
-
         // Process GObjLoaded array. Note that GObjLoaded may receive new element during PostLoad call
         // (e.g. UMaterial3::ScanUE4Textures() does that), so we should use an outer loop to ensure
         // all objects will be loaded.
@@ -173,15 +171,16 @@ void UObject::EndLoad()
                 UnPackage* Package = Obj->Package;
 
                 guard(LoadObject)
-                    ;
                     PROFILE_LABEL(Obj->GetClassName());
 
-                    Package->SetupReader(Obj->PackageIndex);
-                    if (!(Obj->GetTypeinfo()->TypeFlags & TYPE_SilentLoad))
+                    if (!IsValidName(Obj->Name))
                     {
-                        appPrintf("Loading %s %s from package %s\n", Obj->GetClassName(), Obj->Name,
-                                  *Package->GetFilename());
+                        appPrintf("Skipping %s %s from package %s due incorrect name\n", Obj->GetClassName(), Obj->Name, *Package->GetFilename());
+                        continue;
                     }
+
+                    Package->SetupReader(Obj->PackageIndex);
+                    appPrintf("Loading %s %s from package %s\n", Obj->GetClassName(), Obj->Name, *Package->GetFilename());
                     // setup NotifyInfo to describe object
                     appSetNotifyHeader("Loading object %s'%s.%s'", Obj->GetClassName(), Package->Name, Obj->Name);
                     #if PROFILE_LOADING
@@ -216,20 +215,19 @@ void UObject::EndLoad()
             for (UObject* Obj : LoadedObjects)
             {
                 guard(PostLoad)
-                    ;
                     Obj->PostLoad();
-                unguardf("%s", Obj->Name);
+                unguardf("%s", Obj->Name)
             }
         }
 
         // Cleanup
         GObjBeginLoadCount--; // decrement after loading
         appSetNotifyHeader(NULL);
-        assert(GObjBeginLoadCount == 0);
+        assert(GObjBeginLoadCount == 0)
         // Close all opened file handles
         UnPackage::CloseAllReaders();
 
-    unguard;
+    unguard
 }
 
 

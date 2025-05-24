@@ -12,6 +12,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <unicode/uchar.h>
+#include <unicode/unistr.h>
 
 #if _MSC_VER
 #	include <intrin.h>
@@ -215,6 +217,8 @@ typedef size_t					address_t;
 #define ROR32(val,shift)		( (unsigned(val) >> (shift)) | (unsigned(val) << (32-(shift))) )
 #endif
 
+
+bool IsValidName(const char* str);
 
 // Using size_t typecasts - that's platform integer type
 template<class T> inline T OffsetPointer(const T ptr, int offset)
