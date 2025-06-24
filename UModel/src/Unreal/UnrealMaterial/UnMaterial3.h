@@ -1151,19 +1151,14 @@ struct FExpressionInput
     DECLARE_STRUCT(FExpressionInput);
 
     UObject* Expression;
-    int Mask;
-    int MaskR;
-    int MaskG;
-    int MaskB;
-    int MaskA;
 
     BEGIN_PROP_TABLE
         PROP_OBJ(Expression)
-        PROP_INT(Mask)
-        PROP_INT(MaskR)
-        PROP_INT(MaskG)
-        PROP_INT(MaskB)
-        PROP_INT(MaskA)
+        PROP_DROP(Mask)
+        PROP_DROP(MaskR)
+        PROP_DROP(MaskG)
+        PROP_DROP(MaskB)
+        PROP_DROP(MaskA)
     END_PROP_TABLE
 };
 

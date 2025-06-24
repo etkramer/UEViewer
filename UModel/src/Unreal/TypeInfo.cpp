@@ -344,6 +344,12 @@ static void CollectProps(const CTypeInfo* Type, const void* Data, CPropDump& Dum
             }
             CPropDump* PD = new(Dump.Nested) CPropDump;
 
+            // Manually hide some material props
+            if (Type->Name == "UMaterial3" && (Prop->Name == "Expressions" || Prop->Name == "CollectedTextureParameters" || Prop->Name == "CollectedScalarParameters" || Prop->Name == "CollectedVectorParameters"))
+            {
+                continue;
+            }
+
             // name
 
             #if DUMP_SHOW_PROP_INDEX
