@@ -328,7 +328,7 @@ struct CPropDump
 };
 
 
-static void CollectProps(const CTypeInfo* Type, const void* Data, CPropDump& Dump)
+static void CollectProps(const CTypeInfo* Type, const void* Data, CPropDump& Dump, bool IsJson = false)
 {
     for (/* empty */; Type; Type = Type->Parent)
     {
@@ -375,10 +375,10 @@ static void CollectProps(const CTypeInfo* Type, const void* Data, CPropDump& Dum
             // formatting of property start
             if (IsArray)
             {
-                PD->PrintName("[%d]", PropCount);
+                PD->PrintName(IsJson ? "" : "[%d]", PropCount);
                 if (!PropCount)
                 {
-                    PD->PrintValue("{}");
+                    PD->PrintValue(IsJson ? "[]" : "{}");
                     continue;
                 }
             }
@@ -420,12 +420,20 @@ static void CollectProps(const CTypeInfo* Type, const void* Data, CPropDump& Dum
                         {
                             char ObjName[256];
                             obj->GetFullName(ARRAY_ARG(ObjName));
-                            PD2->PrintValue("%s'%s.%s'", obj->GetClassName(), obj->GetPackageName(), ObjName);
+
+                            if (IsJson)
+                            {
+                                PD2->PrintValue("\"%s\"", ObjName);
+                            }
+                            else
+                            {
+                                PD2->PrintValue("%s'%s.%s'", obj->GetClassName(), obj->GetPackageName(), ObjName);
+                            }
                         }
                         else
                         {
                             // Process this like a structure
-                            CollectProps(obj->GetTypeinfo(), obj, *PD2);
+                            CollectProps(obj->GetTypeinfo(), obj, *PD2, IsJson);
                         }
                     }
                     else
@@ -434,21 +442,21 @@ static void CollectProps(const CTypeInfo* Type, const void* Data, CPropDump& Dum
                         {
                             PD2->Discard();
                         }
-                        PD2->PrintValue("None");
+                        PD2->PrintValue(IsJson ? "null" : "None");
                     }
                 }
-                PROCESS(FName, "%s", *PROP(FName));
+                PROCESS(FName, IsJson ? "\"%s\"" : "%s", *PROP(FName));
                 PROCESS(FString, "\"%s\"", *PROP(FString));
                 if (Prop->TypeName[0] == '#')
                 {
                     // enum value
                     const char* v = EnumToName(Prop->TypeName + 1, *value); // skip enum marker
-                    PD2->PrintValue("%s (%d)", v ? v : "<unknown>", *value);
+                    PD2->PrintValue(IsJson ? "\"%s\"" : "%s (%d)", v ? v : "<unknown>", *value);
                 }
                 if (IsStruc)
                 {
                     // this is a structure type
-                    CollectProps(StrucType, value + ArrayIndex * StrucType->SizeOf, *PD2);
+                    CollectProps(StrucType, value + ArrayIndex * StrucType->SizeOf, *PD2, IsJson);
                 }
             } // ArrayIndex loop
         } // PropIndex loop
@@ -463,18 +471,19 @@ static void PrintIndent(FArchive& Ar, int Value)
         Ar.Printf("    ");
 }
 
-static void PrintProps(const CPropDump& Dump, FArchive& Ar, int Indent, bool TopLevel, int MaxLineWidth = 80)
+static void PrintProps(const CPropDump& Dump, FArchive& Ar, int Indent, bool TopLevel, int MaxLineWidth = 80, bool IsJson = false)
 {
-    PrintIndent(Ar, Indent);
-
+    bool IsArray = Dump.Nested.Num() && Dump.Nested[0].bIsArrayItem;
     const int NumNestedProps = Dump.Nested.Num();
     if (NumNestedProps)
     {
+        PrintIndent(Ar, Indent);
+
         // complex property
         bool bNamePrinted = false;
-        if (!Dump.Name.IsEmpty())
+        if (!Dump.Name.IsEmpty() && (!IsJson || !Dump.bIsArrayItem))
         {
-            Ar.Printf("%s =", *Dump.Name); // root CPropDump will not have a name
+            Ar.Printf(IsJson ? "\"%s\":" : "%s =", *Dump.Name); // root CPropDump will not have a name
             bNamePrinted = true;
         }
 
@@ -500,6 +509,11 @@ static void PrintProps(const CPropDump& Dump, FArchive& Ar, int Indent, bool Top
                 IsSimple = false;
                 break;
             }
+        }
+
+        if (IsJson)
+        {
+            IsSimple = false;
         }
 
         if (IsSimple)
@@ -530,27 +544,50 @@ static void PrintProps(const CPropDump& Dump, FArchive& Ar, int Indent, bool Top
             if (bNamePrinted) Ar.Printf("\n");
             if (!TopLevel)
             {
-                PrintIndent(Ar, Indent);
-                Ar.Printf("{\n");
+                if (bNamePrinted || !IsJson)
+                {
+                    PrintIndent(Ar, Indent);
+                }
+                
+                Ar.Printf((IsJson && IsArray) ? "[\n" : "{\n");
             }
 
             for (const CPropDump& Prop : Dump.Nested)
             {
                 if (Prop.bDiscard) continue;
-                PrintProps(Prop, Ar, Indent + 1, false, MaxLineWidth);
+                PrintProps(Prop, Ar, Indent + 1, false, MaxLineWidth, IsJson);
             }
 
             if (!TopLevel)
             {
                 PrintIndent(Ar, Indent);
-                Ar.Printf("}\n");
+                Ar.Printf(IsJson ? (IsArray ? "],\n" : "},\n") : "}\n");
             }
         }
     }
     else
     {
         // single property
-        if (!Dump.Name.IsEmpty()) Ar.Printf("%s = %s\n", *Dump.Name, *Dump.Value);
+        if (!Dump.Name.IsEmpty())
+        {
+            if (IsJson && !Dump.Value.IsEmpty())
+            {
+                PrintIndent(Ar, Indent);
+                if (Dump.bIsArrayItem)
+                {
+                    Ar.Printf("%s,\n", *Dump.Value);
+                }
+                else
+                {
+                    Ar.Printf("\"%s\": %s,\n", *Dump.Name, *Dump.Value);
+                }
+            }
+            else if (!IsJson)
+            {
+                PrintIndent(Ar, Indent);
+                Ar.Printf("%s = %s\n", *Dump.Name, *Dump.Value);
+            }
+        }
     }
 }
 
@@ -650,15 +687,24 @@ void CTypeInfo::DumpProps(const void* Data, void (*Callback)(const char*)) const
     unguard;
 }
 
-void CTypeInfo::SaveProps(const void* Data, FArchive& Ar) const
+void CTypeInfo::SaveProps(const void* Data, FArchive& Ar, bool IsJson) const
 {
     guard(CTypeInfo::SaveProps)
         ;
         CPropDump Dump;
-        CollectProps(this, Data, Dump);
+        CollectProps(this, Data, Dump, IsJson);
 
-        // Note: using indent -1 for better in-file formatting
-        PrintProps(Dump, Ar, -1, true, MAX_DUMP_LINE);
+        if (IsJson)
+        {
+            Ar.Printf("{\n");
+            PrintProps(Dump, Ar, 0, true, MAX_DUMP_LINE, IsJson);
+            Ar.Printf("}\n");
+        }
+        else
+        {
+            // Note: using indent -1 for better in-file formatting
+            PrintProps(Dump, Ar, -1, true, MAX_DUMP_LINE, IsJson);
+        }
 
     unguard;
 }

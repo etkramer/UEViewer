@@ -64,10 +64,10 @@ void ExportMaterial(const UUnrealMaterial* Mat)
         PROC(Mask);
 
         // Dump material properties to a separate file
-        FArchive* PropAr = CreateExportArchive(Mat, EFileArchiveOptions::TextFile, "%s.props.txt", Mat->Name);
+        FArchive* PropAr = CreateExportArchive(Mat, EFileArchiveOptions::TextFile, "%s.props.json", Mat->Name);
         if (PropAr)
         {
-            Mat->GetTypeinfo()->SaveProps(Mat, *PropAr);
+            Mat->GetTypeinfo()->SaveProps(Mat, *PropAr, true);
             delete PropAr;
         }
 

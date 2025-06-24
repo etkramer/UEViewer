@@ -174,7 +174,7 @@ struct CTypeInfo
 
     void DumpProps(const void* Data) const;
     void DumpProps(const void* Data, void (*Callback)(const char*)) const;
-    void SaveProps(const void* Data, FArchive& Ar) const;
+    void SaveProps(const void* Data, FArchive& Ar, bool IsJson = false) const;
     bool LoadProps(void* Data, FArchive& Ar) const;
 };
 
