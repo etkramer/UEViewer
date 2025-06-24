@@ -345,6 +345,11 @@ void UMaterial3::ScanMaterialExpressions()
                 {
                     if (!Obj) continue;
 
+                    if (Obj->IsA("MaterialExpression"))
+                    {
+                        UMaterialExpression* Expr = (UMaterialExpression*)Obj;
+                        Expr->ClassName = Expr->GetClassName();
+                    }
                     if (Obj->IsA("MaterialExpressionTextureSampleParameter"))
                     {
                         const UMaterialExpressionTextureSampleParameter2D* Expr = static_cast<const

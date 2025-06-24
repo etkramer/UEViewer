@@ -7,7 +7,11 @@ class UMaterialExpression : public UObject
         TYPE_FLAGS(TYPE_SilentLoad | TYPE_InlinePropDump);
 
     public:
+        // Generated data
+        FString ClassName;
+
         BEGIN_PROP_TABLE
+            PROP_STRING(ClassName)
             PROP_DROP(Material)
             PROP_DROP(Function)
             PROP_DROP(EditorX)
