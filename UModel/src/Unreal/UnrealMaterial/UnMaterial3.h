@@ -833,6 +833,61 @@ struct FMaterialCachedExpressionData
 
 #endif // UNREAL4
 
+struct FMaterialInputBase
+{
+    DECLARE_STRUCT(FMaterialInputBase);
+
+    class UMaterialExpression* Expression;
+
+    BEGIN_PROP_TABLE
+        PROP_OBJ(Expression)
+        PROP_DROP(Mask)
+        PROP_DROP(MaskR)
+        PROP_DROP(MaskG)
+        PROP_DROP(MaskB)
+        PROP_DROP(MaskA)
+    END_PROP_TABLE
+};
+
+struct FColorMaterialInput : public FMaterialInputBase
+{
+    DECLARE_STRUCT2(FColorMaterialInput, FMaterialInputBase);
+
+    bool UseConstant;
+    FColor Constant;
+
+    BEGIN_PROP_TABLE
+        PROP_BOOL(UseConstant)
+        PROP_STRUC(Constant, FColor)
+    END_PROP_TABLE
+};
+
+struct FScalarMaterialInput : public FMaterialInputBase
+{
+    DECLARE_STRUCT2(FScalarMaterialInput, FMaterialInputBase);
+
+    bool UseConstant;
+    float Constant;
+
+    BEGIN_PROP_TABLE
+        PROP_BOOL(UseConstant)
+        PROP_FLOAT(Constant)
+    END_PROP_TABLE
+};
+
+struct FVectorMaterialInput : public FMaterialInputBase
+{
+    DECLARE_STRUCT2(FVectorMaterialInput, FMaterialInputBase);
+
+    bool UseConstant;
+    FVector Constant;
+
+    BEGIN_PROP_TABLE
+        PROP_BOOL(UseConstant)
+        PROP_STRUC(Constant, FVector)
+    END_PROP_TABLE
+};
+
 class UMaterial3 : public UMaterialInterface
 {
         DECLARE_CLASS(UMaterial3, UMaterialInterface)
@@ -853,6 +908,16 @@ class UMaterial3 : public UMaterialInterface
         TArray<CTextureParameterValue> CollectedTextureParameters;
         TArray<CScalarParameterValue> CollectedScalarParameters;
         TArray<CVectorParameterValue> CollectedVectorParameters;
+
+        // Extras
+        FColorMaterialInput DiffuseColor;
+        FColorMaterialInput SpecularColor;
+        FColorMaterialInput EmissiveColor;
+        FScalarMaterialInput DiffusePower;
+        FScalarMaterialInput SpecularPower;
+        FScalarMaterialInput Opacity;
+        FScalarMaterialInput OpacityMask;
+        FVectorMaterialInput Normal;
 
         UMaterial3()
             : OpacityMaskClipValue(0.333f) //?? check
@@ -875,17 +940,17 @@ class UMaterial3 : public UMaterialInterface
             PROP_ARRAY(CollectedVectorParameters, "CVectorParameterValue")
             #endif // DECLARE_VIEWER_PROPS
             //!! should be used (main material inputs in UE3 material editor)
-            PROP_DROP(DiffuseColor)
-            PROP_DROP(DiffusePower) // GoW2
-            PROP_DROP(EmissiveColor)
-            PROP_DROP(SpecularColor)
-            PROP_DROP(SpecularPower)
-            PROP_DROP(Opacity)
-            PROP_DROP(OpacityMask)
+            PROP_STRUC(DiffuseColor, FColorMaterialInput)
+            PROP_STRUC(DiffusePower, FScalarMaterialInput)
+            PROP_STRUC(EmissiveColor, FColorMaterialInput)
+            PROP_STRUC(SpecularColor, FColorMaterialInput)
+            PROP_STRUC(SpecularPower, FScalarMaterialInput)
+            PROP_STRUC(Opacity, FScalarMaterialInput)
+            PROP_STRUC(OpacityMask, FScalarMaterialInput)
             PROP_DROP(Distortion)
             PROP_DROP(TwoSidedLightingMask) // TransmissionMask ?
             PROP_DROP(TwoSidedLightingColor) // TransmissionColor ?
-            PROP_DROP(Normal)
+            PROP_STRUC(Normal, FVectorMaterialInput)
             PROP_DROP(CustomLighting)
             // drop other props
             PROP_DROP(PhysMaterial)
@@ -1080,6 +1145,27 @@ struct FStaticParameterSet
 };
 
 #endif // UNREAL4
+
+struct FExpressionInput
+{
+    DECLARE_STRUCT(FExpressionInput);
+
+    UObject* Expression;
+    int Mask;
+    int MaskR;
+    int MaskG;
+    int MaskB;
+    int MaskA;
+
+    BEGIN_PROP_TABLE
+        PROP_OBJ(Expression)
+        PROP_INT(Mask)
+        PROP_INT(MaskR)
+        PROP_INT(MaskG)
+        PROP_INT(MaskB)
+        PROP_INT(MaskA)
+    END_PROP_TABLE
+};
 
 struct FScalarParameterValue
 {
@@ -1337,7 +1423,12 @@ class UUIStreamingTextures : public UObject
 	REGISTER_CLASS(FScalarParameterValue)  \
 	REGISTER_CLASS(FTextureParameterValue) \
 	REGISTER_CLASS(FVectorParameterValue)  \
-	REGISTER_CLASS(UMaterialInstanceConstant)
+	REGISTER_CLASS(UMaterialInstanceConstant) \
+    REGISTER_CLASS(FMaterialInputBase) \
+    REGISTER_CLASS(FColorMaterialInput) \
+    REGISTER_CLASS(FScalarMaterialInput) \
+    REGISTER_CLASS(FVectorMaterialInput) \
+    REGISTER_CLASS(FExpressionInput)
 
 #define REGISTER_MATERIAL_CLASSES_DCUO	\
 	REGISTER_CLASS(UUIStreamingTextures)
