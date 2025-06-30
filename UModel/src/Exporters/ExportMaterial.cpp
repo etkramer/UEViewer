@@ -17,6 +17,12 @@ void ExportMaterial(const UUnrealMaterial* Mat)
 
         if (!Mat) return;
 
+        // ETK: Skip cube textures
+        if (Mat->IsTextureCube() || (Mat->Outer && Mat->Outer->IsA("TextureCube3")))
+        {
+            return;
+        }
+
         if (Mat->IsTextureCube())
         {
             ExportCubemap(Mat);
@@ -42,6 +48,23 @@ void ExportMaterial(const UUnrealMaterial* Mat)
             // return;
         }
 
+        // ETK: Choose JSON name based on sub-type
+        const char* PropFileName = Mat->IsTexture() ? "%s.texture.json" : (Mat->IsA("MaterialInstance") ? "%s.materialinstance.json" : "%s.material.json");
+
+        // Dump material properties to a separate file
+        FArchive* PropAr = CreateExportArchive(Mat, EFileArchiveOptions::TextFile, PropFileName, Mat->Name);
+        if (PropAr)
+        {
+            Mat->GetTypeinfo()->SaveProps(Mat, *PropAr, true);
+            delete PropAr;
+        }
+        
+        // ETK: Don't export .mat files
+        if (true)
+        {
+            return;
+        }
+
         FArchive* Ar = CreateExportArchive(Mat, EFileArchiveOptions::TextFile, "%s.mat", Mat->Name);
         if (!Ar) return;
 
@@ -62,14 +85,6 @@ void ExportMaterial(const UUnrealMaterial* Mat)
         PROC(Emissive);
         PROC(Cube);
         PROC(Mask);
-
-        // Dump material properties to a separate file
-        FArchive* PropAr = CreateExportArchive(Mat, EFileArchiveOptions::TextFile, "%s.props.json", Mat->Name);
-        if (PropAr)
-        {
-            Mat->GetTypeinfo()->SaveProps(Mat, *PropAr, true);
-            delete PropAr;
-        }
 
         // Export other textures
         int numOtherTextures = 0;

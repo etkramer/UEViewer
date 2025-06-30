@@ -33,8 +33,26 @@ static CVec3 GetMaterialDebugColor(int Index)
 
 static void ExportMaterial(UUnrealMaterial* Mat, FArchive& Ar, int index, bool bLast)
 {
-    char dummyName[64];
+    char dummyName[256];
     appSprintf(ARRAY_ARG(dummyName), "dummy_material_%d", index);
+
+    // Write full path names
+    if (Mat != NULL)
+    {
+        Mat->GetFullName(ARRAY_ARG(dummyName));
+
+        // Replace "." with "__" (2 underscores) to eliminate special characters.
+        for (char* c = dummyName; *c; c++)
+        {
+            if (*c == '.')
+            {
+                c[0] = '_';
+                memmove(c + 2, c + 1, strlen(c));
+                c[1] = '_';
+                c++;
+            }
+        }
+    }
 
     CVec3 Color = GetMaterialDebugColor(index);
     Ar.Printf(
@@ -46,7 +64,7 @@ static void ExportMaterial(UUnrealMaterial* Mat, FArchive& Ar, int index, bool b
         "        \"roughnessFactor\" : 0.5\n"
         "      }\n"
         "    }%s\n",
-        Mat ? Mat->Name : dummyName,
+        dummyName,
         Color[0], Color[1], Color[2],
         bLast ? "" : ","
     );

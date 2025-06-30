@@ -7,10 +7,12 @@ class UMaterialExpression : public UObject
         TYPE_FLAGS(TYPE_SilentLoad | TYPE_InlinePropDump);
 
     public:
-        // Generated data
+        // ETK: Generated data
+        int Index;
         FString ClassName;
 
         BEGIN_PROP_TABLE
+            PROP_INT(Index)
             PROP_STRING(ClassName)
             PROP_DROP(Material)
             PROP_DROP(Function)
@@ -140,6 +142,21 @@ public:
 
     BEGIN_PROP_TABLE
         PROP_FLOAT(R)
+    END_PROP_TABLE
+};
+
+
+class UMaterialExpressionConstant2Vector : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionConstant2Vector, UMaterialExpression)
+
+public:
+    float R;
+    float G;
+
+    BEGIN_PROP_TABLE
+        PROP_FLOAT(R)
+        PROP_FLOAT(G)
     END_PROP_TABLE
 };
 
@@ -325,14 +342,119 @@ public:
     END_PROP_TABLE
 };
 
+class UMaterialExpressionClamp : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionClamp, UMaterialExpression)
+
+public:
+    FExpressionInput Input;
+    FExpressionInput Min;
+    FExpressionInput Max;
+
+    BEGIN_PROP_TABLE
+        PROP_STRUC(Input, FExpressionInput)
+        PROP_STRUC(Min, FExpressionInput)
+        PROP_STRUC(Max, FExpressionInput)
+    END_PROP_TABLE
+};
+
+class UMaterialExpressionConstantClamp : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionConstantClamp, UMaterialExpression)
+
+public:
+    FExpressionInput Input;
+    float Min;
+    float Max;
+
+    BEGIN_PROP_TABLE
+        PROP_STRUC(Input, FExpressionInput)
+        PROP_FLOAT(Min)
+        PROP_FLOAT(Max)
+    END_PROP_TABLE
+};
+
+class UMaterialExpressionFresnel : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionFresnel, UMaterialExpression)
+
+public:
+    FExpressionInput Normal;
+    float Exponent;
+
+    BEGIN_PROP_TABLE
+        PROP_STRUC(Normal, FExpressionInput)
+        PROP_FLOAT(Exponent)
+    END_PROP_TABLE
+};
+
+class UMaterialExpressionOneMinus : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionOneMinus, UMaterialExpression)
+
+public:
+    FExpressionInput Input;
+
+    BEGIN_PROP_TABLE
+        PROP_STRUC(Input, FExpressionInput)
+    END_PROP_TABLE
+};
+
+class UMaterialExpressionSine : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionSine, UMaterialExpression)
+
+public:
+    FExpressionInput Input;
+    float Period;
+
+    BEGIN_PROP_TABLE
+        PROP_STRUC(Input, FExpressionInput)
+        PROP_FLOAT(Period)
+    END_PROP_TABLE
+};
+
+enum EMaterialVectorCoordTransform
+{
+    TRANSFORM_World,
+    TRANSFORM_View,
+    TRANSFORM_Local,
+    TRANSFORM_Tangent
+};
+
+enum EMaterialVectorCoordTransformSource
+{
+    TRANSFORMSOURCE_World,
+    TRANSFORMSOURCE_Local,
+    TRANSFORMSOURCE_Tangent
+};
+
+class UMaterialExpressionTransform : public UMaterialExpression
+{
+    DECLARE_CLASS(UMaterialExpressionTransform, UMaterialExpression)
+
+public:
+    FExpressionInput Input;
+    EMaterialVectorCoordTransform TransformType;
+    EMaterialVectorCoordTransformSource TransformSourceType;
+
+    BEGIN_PROP_TABLE
+        PROP_STRUC(Input, FExpressionInput)
+        PROP_ENUM2(TransformType, EMaterialVectorCoordTransform)
+        PROP_ENUM2(TransformSourceType, EMaterialVectorCoordTransformSource)
+    END_PROP_TABLE
+};
+
 #define REGISTER_EXPRESSION_CLASSES \
 	REGISTER_CLASS(UMaterialExpressionTextureSample) \
+    REGISTER_CLASS(UMaterialExpressionTextureSampleParameter) \
 	REGISTER_CLASS(UMaterialExpressionTextureSampleParameter2D) \
 	REGISTER_CLASS(UMaterialExpressionScalarParameter) \
 	REGISTER_CLASS(UMaterialExpressionStaticBoolParameter) \
 	REGISTER_CLASS(UMaterialExpressionStaticSwitchParameter) \
 	REGISTER_CLASS(UMaterialExpressionVectorParameter) \
     REGISTER_CLASS(UMaterialExpressionConstant) \
+    REGISTER_CLASS(UMaterialExpressionConstant2Vector) \
     REGISTER_CLASS(UMaterialExpressionConstant3Vector) \
     REGISTER_CLASS(UMaterialExpressionCameraVector) \
     REGISTER_CLASS(UMaterialExpressionReflectionVector) \
@@ -345,6 +467,12 @@ public:
     REGISTER_CLASS(UMaterialExpressionPanner) \
     REGISTER_CLASS(UMaterialExpressionAppendVector) \
     REGISTER_CLASS(UMaterialExpressionComponentMask) \
-    REGISTER_CLASS(UMaterialExpressionTextureCoordinate)
+    REGISTER_CLASS(UMaterialExpressionTextureCoordinate) \
+    // ETK: Add these to import script
+    REGISTER_CLASS(UMaterialExpressionClamp) \
+    REGISTER_CLASS(UMaterialExpressionConstantClamp) \
+    REGISTER_CLASS(UMaterialExpressionFresnel) \
+    REGISTER_CLASS(UMaterialExpressionOneMinus) \
+    REGISTER_CLASS(UMaterialExpressionSine)
 
 #endif // __UNMATERIAL_EXPRESSION_H__

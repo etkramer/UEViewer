@@ -349,6 +349,7 @@ void UMaterial3::ScanMaterialExpressions()
                     {
                         UMaterialExpression* Expr = (UMaterialExpression*)Obj;
                         Expr->ClassName = Expr->GetClassName();
+                        Expr->Index = Expr->PackageIndex;
                     }
                     if (Obj->IsA("MaterialExpressionTextureSampleParameter"))
                     {

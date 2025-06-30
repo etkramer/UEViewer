@@ -167,11 +167,14 @@ class UTexture3 : public UUnrealMaterial // in UE3 it is derived from USurface->
         FTextureSource Source;
         #endif
         ETextureCompressionSettings CompressionSettings;
+        bool SRGB;
+        bool NeverStream;
 
         UTexture3()
         {
             UnpackMax[0] = UnpackMax[1] = UnpackMax[2] = UnpackMax[3] = 1.0f;
             CompressionSettings = TC_Default;
+            SRGB = true;
         }
 
         BEGIN_PROP_TABLE
@@ -183,14 +186,14 @@ class UTexture3 : public UUnrealMaterial // in UE3 it is derived from USurface->
             PROP_DROP(AssetImportData)
             #endif
             // no properties required (all are for importing and cooking)
-            PROP_DROP(SRGB)
+            PROP_BOOL(SRGB)
             PROP_DROP(RGBE)
             PROP_DROP(CompressionNoAlpha)
             PROP_DROP(CompressionNone)
             PROP_DROP(CompressionNoMipmaps)
             PROP_DROP(CompressionFullDynamicRange)
             PROP_DROP(DeferCompression)
-            PROP_DROP(NeverStream)
+            PROP_BOOL(NeverStream)
             PROP_DROP(bDitherMipMapAlpha)
             PROP_DROP(bPreserveBorderR)
             PROP_DROP(bPreserveBorderG)
@@ -1151,14 +1154,21 @@ struct FExpressionInput
     DECLARE_STRUCT(FExpressionInput);
 
     UObject* Expression;
+    int Mask;
+    int MaskR;
+    int MaskG;
+    int MaskB;
+    int MaskA;
+    int GCC64_Padding;
 
     BEGIN_PROP_TABLE
         PROP_OBJ(Expression)
-        PROP_DROP(Mask)
-        PROP_DROP(MaskR)
-        PROP_DROP(MaskG)
-        PROP_DROP(MaskB)
-        PROP_DROP(MaskA)
+        PROP_INT(Mask)
+        PROP_INT(MaskR)
+        PROP_INT(MaskG)
+        PROP_INT(MaskB)
+        PROP_INT(MaskA)
+        PROP_DROP(GCC64_Padding)
     END_PROP_TABLE
 };
 
